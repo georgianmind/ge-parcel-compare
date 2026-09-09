@@ -1,0 +1,44 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Apple-style background gradient: warm Georgian red, light from the top -->
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF6A5B"/>
+      <stop offset="0.55" stop-color="#E63A2A"/>
+      <stop offset="1" stop-color="#C6221A"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <!-- parcel body -->
+    <linearGradient id="box" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#E9ECF0"/>
+    </linearGradient>
+    <linearGradient id="flap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#F4F6F8"/>
+    </linearGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#7A0E08" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- iOS-radius squircle (approximated with rounded rect) -->
+  <rect x="0" y="0" width="128" height="128" rx="29" fill="url(#bg)"/>
+  <!-- top gloss highlight -->
+  <rect x="0" y="0" width="128" height="64" rx="29" fill="url(#gloss)"/>
+
+  <!-- parcel -->
+  <g filter="url(#softShadow)">
+    <rect x="30" y="38" width="68" height="56" rx="10" fill="url(#box)"/>
+    <!-- lid flap -->
+    <rect x="30" y="38" width="68" height="18" rx="9" fill="url(#flap)"/>
+    <line x1="33" y1="56" x2="95" y2="56" stroke="#D4D9DF" stroke-width="1.6"/>
+  </g>
+
+  <!-- lari symbol from the system font -->
+  <text x="64" y="87" text-anchor="middle"
+        font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif"
+        font-size="44" font-weight="700" fill="#E63A2A">₾</text>
+</svg>

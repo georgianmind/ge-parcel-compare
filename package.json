@@ -1,6 +1,6 @@
 {
   "name": "ge-parcel-compare",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "type": "module",
   "description": "Chrome extension comparing Georgian forwarder landed costs (Camex, Inex, USA2Georgia) on retailer product pages",
