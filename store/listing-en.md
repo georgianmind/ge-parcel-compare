@@ -1,7 +1,7 @@
 # Chrome Web Store listing — English
 
 ## Name
-GE Parcel Compare — shipping to Georgia
+Amanati — Shipping Cost to Georgia
 
 ## Summary (132 chars max)
 See the real landed cost to Tbilisi via Camex, Inex, USA2Georgia & Kiwi Post right on the product page — VAT check and weight estimate included.

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Amanati — Shipping Cost to Georgia",
+    "description": "Extension name"
+  },
+  "appDesc": {
+    "message": "Compare the landed cost to Tbilisi via Camex, Inex, USA2Georgia and Kiwi Post directly on retailer product pages.",
+    "description": "Extension description"
+  }
+}

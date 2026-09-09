@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "ამანათი — გზავნილის ღირებულება თბილისამდე",
+    "description": "Extension name"
+  },
+  "appDesc": {
+    "message": "შეადარეთ სრული ღირებულება თბილისამდე Camex-ით, Inex-ით, USA2Georgia-თი და Kiwi Post-ით პირდაპირ პროდუქტის გვერდზე.",
+    "description": "Extension description"
+  }
+}

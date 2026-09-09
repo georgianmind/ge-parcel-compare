@@ -3,12 +3,11 @@ import pkg from './package.json';
 
 export default defineManifest({
   manifest_version: 3,
-  name: 'GE Parcel Compare',
-  description:
-    'Compare landed cost to Tbilisi via Camex, Inex, USA2Georgia and Kiwi Post directly on retailer product pages.',
+  name: '__MSG_appName__',
+  description: '__MSG_appDesc__',
   version: pkg.version,
   minimum_chrome_version: '116',
-  default_locale: undefined,
+  default_locale: 'en',
   icons: {
     '16': 'icons/icon16.png',
     '48': 'icons/icon48.png',

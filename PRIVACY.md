@@ -1,10 +1,10 @@
-# Privacy Policy — GE Parcel Compare
+# Privacy Policy — Amanati
 
-_Last updated: 2026-09-03_
+_Last updated: 2026-09-09_
 
 ## The short version
 
-**Nothing you browse leaves your browser.** GE Parcel Compare does all price and
+**Nothing you browse leaves your browser.** Amanati does all price and
 shipping-cost computation locally, on your device.
 
 ## What the extension accesses

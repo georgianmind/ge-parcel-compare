@@ -236,7 +236,7 @@ function Popup() {
     <div class="wrap">
       <div class="brand">
         <img src="../../icons/icon48.png" alt="" />
-        GE Parcel Compare
+        Amanati
         <span style="flex:1"></span>
         <select
           value={lang}

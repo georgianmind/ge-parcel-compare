@@ -1,4 +1,4 @@
-# GE Parcel Compare
+# Amanati
 
 Chrome extension (MV3) that overlays a Georgian-forwarder landed-cost
 comparison on retailer product pages: browse a product on zara.com, see the
