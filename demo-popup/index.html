@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>GE Parcel Compare</title>
+    <style>
+      :root {
+        --bg: #ffffff; --bg-alt: #f2f4f6; --border: #d6d9dc;
+        --text: #24272a; --text-alt: #535a61; --text-muted: #9fa6ae;
+        --primary: #0376c9; --primary-soft: #eaf6ff;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #24272a; --bg-alt: #141618; --border: #3b4046;
+          --text: #f2f4f6; --text-alt: #bbc0c5; --text-muted: #747c85;
+          --primary: #43aefc; --primary-soft: #14263a;
+        }
+      }
+      body {
+        width: 330px; margin: 0; background: var(--bg); color: var(--text);
+        font: 13px/1.5 "Euclid Circular B", -apple-system, "Segoe UI", Roboto, "Noto Sans Georgian", sans-serif;
+      }
+      .wrap { padding: 14px; display: grid; gap: 12px; }
+      .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+      .brand img { width: 22px; height: 22px; border-radius: 6px; }
+      .section {
+        border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px;
+        display: grid; gap: 6px;
+      }
+      .section-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+      .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+      .hint { font-size: 11px; color: var(--text-muted); }
+      .fx { font-size: 12px; color: var(--text-alt); }
+      select, input[type="number"], input[type="url"] {
+        border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px;
+        background: var(--bg); color: var(--text); font-size: 12.5px;
+      }
+      input[type="number"] { width: 72px; }
+      input[type="url"] { width: 100%; }
+      button.primary {
+        border: none; background: var(--primary); color: #fff; font-weight: 700;
+        border-radius: 999px; padding: 9px 0; width: 100%; cursor: pointer; font-size: 13px;
+      }
+      button.primary:hover { filter: brightness(1.08); }
+      button.ghost {
+        border: 1px solid var(--primary); background: transparent; color: var(--primary);
+        border-radius: 999px; padding: 3px 12px; cursor: pointer; font-size: 12px; font-weight: 600;
+      }
+      label.check { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+      .status { font-size: 11.5px; color: var(--primary); min-height: 14px; }
+      @media (prefers-color-scheme: dark) { button.primary { color: #141618; } }
+      .tabs { display: flex; gap: 4px; background: var(--bg-alt); border-radius: 999px; padding: 3px; }
+      .tabs button {
+        flex: 1; border: none; background: transparent; color: var(--text-alt);
+        border-radius: 999px; padding: 6px 0; cursor: pointer; font-size: 12.5px; font-weight: 600;
+      }
+      .tabs button.active { background: var(--bg); color: var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+      .chips { display: flex; gap: 5px; flex-wrap: wrap; }
+      .chips button {
+        border: 1px solid var(--border); background: var(--bg); color: var(--text-alt);
+        border-radius: 999px; padding: 3px 11px; cursor: pointer; font-size: 12px; font-weight: 600;
+      }
+      .chips button.active { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+      .field { display: grid; grid-template-columns: 92px 1fr 26px; gap: 5px; align-items: center; }
+      .field .lbl { font-size: 11px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .field input { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; background: var(--bg); color: var(--text); font-size: 12px; }
+      .copybtn {
+        border: none; background: transparent; cursor: pointer; font-size: 13px;
+        color: var(--text-muted); padding: 2px; border-radius: 6px;
+      }
+      .copybtn:hover { color: var(--primary); background: var(--primary-soft); }
+      a.sitelink { color: var(--primary); font-size: 11.5px; text-decoration: none; }
+      a.sitelink:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./stub.ts"></script>
+    <script type="module" src="../src/popup/main.tsx"></script>
+  </body>
+</html>
