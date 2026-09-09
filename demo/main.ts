@@ -1,5 +1,5 @@
 // Demo-only harness: stub the chrome extension APIs, then run the content script.
-const store: Record<string, unknown> = {};
+const store: Record<string, unknown> = { panelExpanded: true };
 (globalThis as Record<string, unknown>).chrome = {
   storage: {
     local: {
