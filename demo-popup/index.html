@@ -5,90 +5,92 @@
     <title>Amanati</title>
     <style>
       :root {
-        --paper: #ffffff; --ink: #111111; --grey: #6e6e6e; --grey-light: #a8a8a8;
-        --rule: #111111; --rule-soft: #e2e2e2; --red: #e30613;
+        --solid: #ffffff; --surface: #f4f4f6; --surface-hover: #ececef;
+        --ink: #16181c; --grey: #74777d; --grey-light: #b0b3b8;
+        --rule: rgba(22,24,28,.08); --red: #e5484d; --red-soft: rgba(229,72,77,.08);
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --paper: #141414; --ink: #f4f4f2; --grey: #9a9a9a; --grey-light: #6e6e6e;
-          --rule: #f4f4f2; --rule-soft: #333333; --red: #ff3340;
+          --solid: #1a1b1e; --surface: #26272b; --surface-hover: #2e2f34;
+          --ink: #f3f4f6; --grey: #9a9da3; --grey-light: #5c5f66;
+          --rule: rgba(243,244,246,.08); --red: #ff5c61; --red-soft: rgba(255,92,97,.1);
         }
       }
-      * { box-sizing: border-box; border-radius: 0 !important; }
+      * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+      button, input, select { transition: all .15s ease; }
       body {
-        width: 330px; margin: 0; background: var(--paper); color: var(--ink);
-        border-top: 6px solid var(--red);
-        font: 13px/1.5 "Helvetica Neue", Helvetica, Arial, "Noto Sans Georgian", sans-serif;
+        width: 330px; margin: 0; background: var(--solid); color: var(--ink);
+        font: 13px/1.5 -apple-system, "SF Pro Text", Inter, "Segoe UI", Roboto, "Noto Sans Georgian", sans-serif;
       }
       .wrap { padding: 16px; display: grid; gap: 14px; }
-      .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
-      .brand img { width: 20px; height: 20px; }
-      .section { border-top: 1px solid var(--rule); padding-top: 10px; display: grid; gap: 7px; }
+      .brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 15px; letter-spacing: -0.02em; }
+      .brand img { width: 24px; height: 24px; border-radius: 7px; }
+      .section { display: grid; gap: 8px; }
       .section-title {
-        font-size: 9px; font-weight: 700; color: var(--grey);
-        text-transform: uppercase; letter-spacing: .14em;
+        font-size: 9.5px; font-weight: 600; color: var(--grey-light);
+        text-transform: uppercase; letter-spacing: .08em;
       }
       .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
       .hint { font-size: 10.5px; color: var(--grey); line-height: 1.45; }
-      .fx { font-size: 12px; color: var(--ink); font-variant-numeric: tabular-nums; }
+      .fx { font-size: 12px; color: var(--ink); font-variant-numeric: tabular-nums; font-weight: 500; }
       select, input[type="number"], input[type="url"] {
-        border: 1px solid var(--rule); padding: 4px 8px;
-        background: var(--paper); color: var(--ink); font-size: 12.5px;
-        font-variant-numeric: tabular-nums;
+        border: none; padding: 6px 10px; border-radius: 9px;
+        background: var(--surface); color: var(--ink); font-size: 12.5px;
+        font-variant-numeric: tabular-nums; font-weight: 500;
       }
+      select:focus, input:focus { outline: 2px solid var(--red); outline-offset: 0; }
       input[type="number"] { width: 72px; }
       input[type="url"] { width: 100%; }
       button.primary {
-        border: none; background: var(--red); color: #fff; font-weight: 700;
-        padding: 11px 0; width: 100%; cursor: pointer; font-size: 11px;
-        letter-spacing: .14em; text-transform: uppercase;
+        border: none; background: var(--red); color: #fff; font-weight: 600;
+        padding: 11px 0; width: 100%; cursor: pointer; font-size: 13px;
+        border-radius: 999px; letter-spacing: -0.01em;
       }
-      button.primary:hover { background: var(--ink); color: var(--paper); }
+      button.primary:hover { filter: brightness(1.08); }
       button.ghost {
-        border: 1px solid var(--ink); background: transparent; color: var(--ink);
-        padding: 4px 12px; cursor: pointer; font-size: 10px; font-weight: 700;
-        letter-spacing: .1em; text-transform: uppercase;
+        border: none; background: var(--surface); color: var(--ink);
+        padding: 5px 14px; cursor: pointer; font-size: 11.5px; font-weight: 600;
+        border-radius: 999px;
       }
-      button.ghost:hover { border-color: var(--red); color: var(--red); }
-      label.check { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+      button.ghost:hover { background: var(--surface-hover); color: var(--red); }
+      label.check { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; }
       input[type="checkbox"] { accent-color: var(--red); }
-      .status { font-size: 11px; color: var(--red); min-height: 14px; }
-      .tabs { display: flex; border-bottom: 1px solid var(--rule); }
+      .status { font-size: 11px; color: var(--red); min-height: 14px; font-weight: 500; }
+      .tabs { display: flex; gap: 4px; background: var(--surface); border-radius: 999px; padding: 3px; }
       .tabs button {
         flex: 1; border: none; background: transparent; color: var(--grey);
-        padding: 8px 0 7px; cursor: pointer; font-size: 10px; font-weight: 700;
-        letter-spacing: .12em; text-transform: uppercase;
-        border-bottom: 3px solid transparent; margin-bottom: -1px;
+        padding: 7px 0; cursor: pointer; font-size: 12px; font-weight: 600;
+        border-radius: 999px;
       }
-      .tabs button.active { color: var(--ink); border-bottom-color: var(--red); }
-      .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+      .tabs button.active { background: var(--solid); color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+      .chips { display: flex; gap: 5px; flex-wrap: wrap; }
       .chips button {
-        border: 1px solid var(--rule-soft); background: transparent; color: var(--grey);
-        padding: 4px 11px; cursor: pointer; font-size: 10.5px; font-weight: 700;
-        letter-spacing: .04em;
+        border: none; background: var(--surface); color: var(--grey);
+        padding: 5px 12px; cursor: pointer; font-size: 11.5px; font-weight: 600;
+        border-radius: 999px;
       }
-      .chips button.active { border-color: var(--red); color: var(--red); }
-      .field { display: grid; grid-template-columns: 92px 1fr 26px; gap: 6px; align-items: center; }
+      .chips button:hover { background: var(--surface-hover); }
+      .chips button.active { background: var(--red-soft); color: var(--red); }
+      .field { display: grid; grid-template-columns: 88px 1fr 26px; gap: 6px; align-items: center; }
       .field .lbl {
-        font-size: 8.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-        color: var(--grey); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        font-size: 8.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+        color: var(--grey-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       }
       .field input {
-        width: 100%; border: none; border-bottom: 1px solid var(--rule-soft);
-        padding: 3px 2px; background: var(--paper); color: var(--ink); font-size: 12.5px;
+        width: 100%; border: none; border-radius: 8px;
+        padding: 5px 9px; background: var(--surface); color: var(--ink); font-size: 12px; font-weight: 500;
       }
-      .field input:focus { outline: none; border-bottom-color: var(--red); }
+      .field input:focus { outline: 2px solid var(--red); }
       .copybtn {
         border: none; background: transparent; cursor: pointer; font-size: 13px;
-        color: var(--grey-light); padding: 2px;
+        color: var(--grey-light); padding: 3px; border-radius: 7px;
       }
-      .copybtn:hover { color: var(--red); }
+      .copybtn:hover { color: var(--red); background: var(--red-soft); }
       a.sitelink {
-        color: var(--ink); font-size: 10px; text-decoration: none;
-        font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-        border-bottom: 1px solid var(--red);
+        color: var(--grey); font-size: 11px; text-decoration: none; font-weight: 600;
       }
       a.sitelink:hover { color: var(--red); }
+      .divider { border-top: 1px solid var(--rule); margin: 2px 0; }
     </style>
   </head>
   <body>
