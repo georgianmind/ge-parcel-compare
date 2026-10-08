@@ -190,11 +190,11 @@ export function Panel({ product, rates, fx, settings }: Props) {
   if (!expanded) {
     return (
       <button class="gpc-pill" style={style} onClick={toggleExpanded} title={t(lang, 'openPanel')}>
-        <span class="gpc-pill-icon">📦</span>
+        <span class="gpc-pill-icon">₾</span>
         {product && cheapest?.available ? (
           <span class="gpc-pill-total">+{gelShort(cheapest.shippingGEL + customsGEL).slice(2)}</span>
         ) : (
-          <span class="gpc-pill-total">₾</span>
+          <span class="gpc-pill-total">—</span>
         )}
       </button>
     );
@@ -273,7 +273,7 @@ export function Panel({ product, rates, fx, settings }: Props) {
                 </span>
               )}
               <button class="gpc-weight-chip" onClick={() => setEditingWeight((v) => !v)}>
-                ⚖ ~{kg} kg{weightLearned ? ' ✓' : ''} ✎
+                ~{kg} kg{weightLearned ? ' ✓' : ''}
               </button>
             </div>
           </div>
@@ -323,7 +323,7 @@ export function Panel({ product, rates, fx, settings }: Props) {
         )}
         {!editingWeight && !weightLearned && product !== null && (
           <div class="gpc-est-note">
-            ⚖ ~{kg} kg — {t(lang, 'estimated')} ({category})
+            ~{kg} kg — {t(lang, 'estimated')} ({category})
           </div>
         )}
 
@@ -334,7 +334,7 @@ export function Panel({ product, rates, fx, settings }: Props) {
                 <span class="gpc-carrier">
                   {CARRIER_LABELS[r.carrier]}
                   {r.deliveryDays && (
-                    <span class="gpc-days">🚚 {r.deliveryDays} {t(lang, 'days')}</span>
+                    <span class="gpc-days">{r.deliveryDays} {t(lang, 'days')}</span>
                   )}
                 </span>
                 <span class="gpc-breakdown">
@@ -345,7 +345,7 @@ export function Panel({ product, rates, fx, settings }: Props) {
                       class="gpc-vol"
                       title={`${t(lang, 'volumetric')}: ${r.quote.volumetricKg.toFixed(2)} kg`}
                     >
-                      {' '}📦{r.quote.billableKg} kg
+                      {' '}vol {r.quote.billableKg} kg
                     </span>
                   )}
                 </span>

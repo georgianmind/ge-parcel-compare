@@ -5,72 +5,90 @@
     <title>Amanati</title>
     <style>
       :root {
-        --bg: #ffffff; --bg-alt: #f2f4f6; --border: #d6d9dc;
-        --text: #24272a; --text-alt: #535a61; --text-muted: #9fa6ae;
-        --primary: #0376c9; --primary-soft: #eaf6ff;
+        --paper: #ffffff; --ink: #111111; --grey: #6e6e6e; --grey-light: #a8a8a8;
+        --rule: #111111; --rule-soft: #e2e2e2; --red: #e30613;
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg: #24272a; --bg-alt: #141618; --border: #3b4046;
-          --text: #f2f4f6; --text-alt: #bbc0c5; --text-muted: #747c85;
-          --primary: #43aefc; --primary-soft: #14263a;
+          --paper: #141414; --ink: #f4f4f2; --grey: #9a9a9a; --grey-light: #6e6e6e;
+          --rule: #f4f4f2; --rule-soft: #333333; --red: #ff3340;
         }
       }
+      * { box-sizing: border-box; border-radius: 0 !important; }
       body {
-        width: 330px; margin: 0; background: var(--bg); color: var(--text);
-        font: 13px/1.5 "Euclid Circular B", -apple-system, "Segoe UI", Roboto, "Noto Sans Georgian", sans-serif;
+        width: 330px; margin: 0; background: var(--paper); color: var(--ink);
+        border-top: 6px solid var(--red);
+        font: 13px/1.5 "Helvetica Neue", Helvetica, Arial, "Noto Sans Georgian", sans-serif;
       }
-      .wrap { padding: 14px; display: grid; gap: 12px; }
-      .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
-      .brand img { width: 22px; height: 22px; border-radius: 6px; }
-      .section {
-        border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px;
-        display: grid; gap: 6px;
+      .wrap { padding: 16px; display: grid; gap: 14px; }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
+      .brand img { width: 20px; height: 20px; }
+      .section { border-top: 1px solid var(--rule); padding-top: 10px; display: grid; gap: 7px; }
+      .section-title {
+        font-size: 9px; font-weight: 700; color: var(--grey);
+        text-transform: uppercase; letter-spacing: .14em;
       }
-      .section-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
       .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-      .hint { font-size: 11px; color: var(--text-muted); }
-      .fx { font-size: 12px; color: var(--text-alt); }
+      .hint { font-size: 10.5px; color: var(--grey); line-height: 1.45; }
+      .fx { font-size: 12px; color: var(--ink); font-variant-numeric: tabular-nums; }
       select, input[type="number"], input[type="url"] {
-        border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px;
-        background: var(--bg); color: var(--text); font-size: 12.5px;
+        border: 1px solid var(--rule); padding: 4px 8px;
+        background: var(--paper); color: var(--ink); font-size: 12.5px;
+        font-variant-numeric: tabular-nums;
       }
       input[type="number"] { width: 72px; }
       input[type="url"] { width: 100%; }
       button.primary {
-        border: none; background: var(--primary); color: #fff; font-weight: 700;
-        border-radius: 999px; padding: 9px 0; width: 100%; cursor: pointer; font-size: 13px;
+        border: none; background: var(--red); color: #fff; font-weight: 700;
+        padding: 11px 0; width: 100%; cursor: pointer; font-size: 11px;
+        letter-spacing: .14em; text-transform: uppercase;
       }
-      button.primary:hover { filter: brightness(1.08); }
+      button.primary:hover { background: var(--ink); color: var(--paper); }
       button.ghost {
-        border: 1px solid var(--primary); background: transparent; color: var(--primary);
-        border-radius: 999px; padding: 3px 12px; cursor: pointer; font-size: 12px; font-weight: 600;
+        border: 1px solid var(--ink); background: transparent; color: var(--ink);
+        padding: 4px 12px; cursor: pointer; font-size: 10px; font-weight: 700;
+        letter-spacing: .1em; text-transform: uppercase;
       }
-      label.check { display: flex; align-items: center; gap: 7px; cursor: pointer; }
-      .status { font-size: 11.5px; color: var(--primary); min-height: 14px; }
-      @media (prefers-color-scheme: dark) { button.primary { color: #141618; } }
-      .tabs { display: flex; gap: 4px; background: var(--bg-alt); border-radius: 999px; padding: 3px; }
+      button.ghost:hover { border-color: var(--red); color: var(--red); }
+      label.check { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+      input[type="checkbox"] { accent-color: var(--red); }
+      .status { font-size: 11px; color: var(--red); min-height: 14px; }
+      .tabs { display: flex; border-bottom: 1px solid var(--rule); }
       .tabs button {
-        flex: 1; border: none; background: transparent; color: var(--text-alt);
-        border-radius: 999px; padding: 6px 0; cursor: pointer; font-size: 12.5px; font-weight: 600;
+        flex: 1; border: none; background: transparent; color: var(--grey);
+        padding: 8px 0 7px; cursor: pointer; font-size: 10px; font-weight: 700;
+        letter-spacing: .12em; text-transform: uppercase;
+        border-bottom: 3px solid transparent; margin-bottom: -1px;
       }
-      .tabs button.active { background: var(--bg); color: var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,.12); }
-      .chips { display: flex; gap: 5px; flex-wrap: wrap; }
+      .tabs button.active { color: var(--ink); border-bottom-color: var(--red); }
+      .chips { display: flex; gap: 6px; flex-wrap: wrap; }
       .chips button {
-        border: 1px solid var(--border); background: var(--bg); color: var(--text-alt);
-        border-radius: 999px; padding: 3px 11px; cursor: pointer; font-size: 12px; font-weight: 600;
+        border: 1px solid var(--rule-soft); background: transparent; color: var(--grey);
+        padding: 4px 11px; cursor: pointer; font-size: 10.5px; font-weight: 700;
+        letter-spacing: .04em;
       }
-      .chips button.active { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
-      .field { display: grid; grid-template-columns: 92px 1fr 26px; gap: 5px; align-items: center; }
-      .field .lbl { font-size: 11px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .field input { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; background: var(--bg); color: var(--text); font-size: 12px; }
+      .chips button.active { border-color: var(--red); color: var(--red); }
+      .field { display: grid; grid-template-columns: 92px 1fr 26px; gap: 6px; align-items: center; }
+      .field .lbl {
+        font-size: 8.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+        color: var(--grey); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
+      .field input {
+        width: 100%; border: none; border-bottom: 1px solid var(--rule-soft);
+        padding: 3px 2px; background: var(--paper); color: var(--ink); font-size: 12.5px;
+      }
+      .field input:focus { outline: none; border-bottom-color: var(--red); }
       .copybtn {
         border: none; background: transparent; cursor: pointer; font-size: 13px;
-        color: var(--text-muted); padding: 2px; border-radius: 6px;
+        color: var(--grey-light); padding: 2px;
       }
-      .copybtn:hover { color: var(--primary); background: var(--primary-soft); }
-      a.sitelink { color: var(--primary); font-size: 11.5px; text-decoration: none; }
-      a.sitelink:hover { text-decoration: underline; }
+      .copybtn:hover { color: var(--red); }
+      a.sitelink {
+        color: var(--ink); font-size: 10px; text-decoration: none;
+        font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+        border-bottom: 1px solid var(--red);
+      }
+      a.sitelink:hover { color: var(--red); }
     </style>
   </head>
   <body>
