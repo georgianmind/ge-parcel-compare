@@ -30,6 +30,9 @@ const STRINGS = {
   productLabel: { ka: 'ნივთი', en: 'item' },
   close: { ka: 'დამალვა', en: 'hide' },
   days: { ka: 'დღე', en: 'days' },
+  totalToTbilisi: { ka: 'სულ, თბილისამდე', en: 'total to Tbilisi' },
+  dutyFreeShort: { ka: 'უბაჟო ✓', en: 'duty-free ✓' },
+  weightShort: { ka: 'წონა', en: 'weight' },
   openPanel: { ka: 'გზავნილის ღირებულება', en: 'shipping cost' },
 } as const;
 

@@ -246,38 +246,27 @@ export function Panel({ product, rates, fx, settings }: Props) {
       <div class="gpc-body">
         {product === null && <div class="gpc-warn">{t(lang, 'detectionFailed')}</div>}
 
-        <div class="gpc-product">
-          {product?.imageUrl && <img src={product.imageUrl} alt="" />}
-          <div class="gpc-product-info">
-            <div class="gpc-title">{product?.title ?? '—'}</div>
-            <div class="gpc-price">
-              {product === null || editingWeight ? (
-                <span class="gpc-price-edit">
-                  <input
-                    type="number" min="0" step="0.01" value={price}
-                    onInput={(e) => setPrice(parseFloat((e.target as HTMLInputElement).value) || 0)}
-                  />
-                  <select
-                    value={currency}
-                    onChange={(e) => setCurrency((e.target as HTMLSelectElement).value as Currency)}
-                  >
-                    <option>EUR</option><option>USD</option><option>GBP</option><option>GEL</option>
-                  </select>
-                </span>
+        {product?.title && <div class="gpc-title">{product.title}</div>}
+
+        {/* The hero is the one number only this extension knows. */}
+        {grandTotal !== null && cheapest?.available && (
+          <div class="gpc-hero">
+            <div class="gpc-hero-label">{t(lang, 'totalToTbilisi')}</div>
+            <div class="gpc-hero-total">
+              ≈{Math.round(grandTotal)}<span class="gpc-hero-cur"> ₾</span>
+            </div>
+            <div class="gpc-hero-sub">
+              <strong>{CARRIER_LABELS[cheapest.carrier]}</strong>
+              {cheapest.deliveryDays && ` · ${cheapest.deliveryDays} ${t(lang, 'days')}`}
+              {' · '}
+              {vatDue ? (
+                <span class="gpc-red">+{Math.round(customsGEL)} ₾ {t(lang, 'vat')}</span>
               ) : (
-                <span>
-                  <strong>{price.toFixed(2)} {sym(currency)}</strong>{' '}
-                  <button class="gpc-gel" onClick={() => setShowFxInfo((v) => !v)}>
-                    {gelShort(productValueGEL)}
-                  </button>
-                </span>
+                t(lang, 'dutyFreeShort')
               )}
-              <button class="gpc-weight-chip" onClick={() => setEditingWeight((v) => !v)}>
-                ~{kg} kg{weightLearned ? ' ✓' : ''}
-              </button>
             </div>
           </div>
-        </div>
+        )}
 
         {showFxInfo && (
           <div class="gpc-fxinfo">
@@ -321,36 +310,26 @@ export function Panel({ product, rates, fx, settings }: Props) {
             <button class="gpc-save" onClick={saveWeight}>{t(lang, 'save')}</button>
           </div>
         )}
-        {!editingWeight && !weightLearned && product !== null && (
-          <div class="gpc-est-note">
-            ~{kg} kg — {t(lang, 'estimated')} ({category})
-          </div>
-        )}
-
         <div class="gpc-quotes">
           {roles.map((r, i) =>
             r.available ? (
-              <div class={`gpc-quote ${i === 0 ? 'gpc-cheapest' : ''}`}>
-                <span class="gpc-carrier">
-                  {CARRIER_LABELS[r.carrier]}
-                  {r.deliveryDays && (
-                    <span class="gpc-days">{r.deliveryDays} {t(lang, 'days')}</span>
-                  )}
-                </span>
-                <span class="gpc-breakdown">
-                  {r.quote.declarationGEL > 0 &&
-                    `${gel(r.quote.transportGEL)} + ${Math.round(r.quote.declarationGEL)}₾ ${t(lang, 'declaration')}`}
-                  {r.quote.usedVolumetric && (
-                    <span
-                      class="gpc-vol"
-                      title={`${t(lang, 'volumetric')}: ${r.quote.volumetricKg.toFixed(2)} kg`}
-                    >
-                      {' '}vol {r.quote.billableKg} kg
-                    </span>
-                  )}
+              <div
+                class={`gpc-quote ${i === 0 ? 'gpc-cheapest' : ''}`}
+                title={[
+                  `${gel(r.quote.transportGEL)} ${t(lang, 'shipping')}`,
+                  r.quote.declarationGEL > 0 &&
+                    `+ ${Math.round(r.quote.declarationGEL)}₾ ${t(lang, 'declaration')}`,
+                  r.quote.usedVolumetric &&
+                    `${t(lang, 'volumetric')} ${r.quote.billableKg} kg`,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
+              >
+                <span class="gpc-carrier">{CARRIER_LABELS[r.carrier]}</span>
+                <span class="gpc-days">
+                  {r.deliveryDays ? `${r.deliveryDays} ${t(lang, 'days')}` : ''}
                 </span>
                 <span class="gpc-total">{gel(r.shippingGEL)}</span>
-                {i === 0 && <span class="gpc-badge">✓</span>}
               </div>
             ) : (
               <div class="gpc-quote gpc-unavail">
@@ -361,26 +340,49 @@ export function Panel({ product, rates, fx, settings }: Props) {
           )}
         </div>
 
-        {cheapest?.available && grandTotal !== null && (
-          <div class="gpc-summary">
-            <div class="gpc-sumrow">
-              <span>{t(lang, 'productLabel')}</span>
-              <span>{gel(productValueGEL)}</span>
-            </div>
-            <div class="gpc-sumrow">
-              <span>{t(lang, 'shipping')} · {CARRIER_LABELS[cheapest.carrier]}</span>
-              <span>{gel(cheapest.shippingGEL)}</span>
-            </div>
-            <div class={`gpc-sumrow ${vatDue ? 'gpc-vat-due' : 'gpc-vat-free'}`}>
-              <span>{vatDue ? `${t(lang, 'vat')} 18%` : t(lang, 'dutyFree')}</span>
-              <span>{vatDue ? gel(customsGEL) : ''}</span>
-            </div>
-            <div class="gpc-sumrow gpc-grand">
-              <span>{t(lang, 'totalWithCheapest')}</span>
-              <span>{gelShort(grandTotal)}</span>
-            </div>
+        <div class="gpc-details">
+          <div class="gpc-drow">
+            <span class="gpc-dlabel">{t(lang, 'productLabel')}</span>
+            {product === null || editingWeight ? (
+              <span class="gpc-price-edit">
+                <input
+                  type="number" min="0" step="0.01" value={price}
+                  onInput={(e) => setPrice(parseFloat((e.target as HTMLInputElement).value) || 0)}
+                />
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency((e.target as HTMLSelectElement).value as Currency)}
+                >
+                  <option>EUR</option><option>USD</option><option>GBP</option><option>GEL</option>
+                </select>
+              </span>
+            ) : (
+              <span class="gpc-dvalue">
+                {price.toFixed(2)} {sym(currency)}{' '}
+                <button class="gpc-gel" onClick={() => setShowFxInfo((v) => !v)}>
+                  {gelShort(productValueGEL)}
+                </button>
+              </span>
+            )}
           </div>
-        )}
+          <div class="gpc-drow">
+            <span class="gpc-dlabel">{t(lang, 'weightShort')}</span>
+            <span class="gpc-dvalue">
+              <button class="gpc-weight-chip" onClick={() => setEditingWeight((v) => !v)}>
+                ~{kg} kg{weightLearned ? ' ✓' : ''}
+              </button>
+              {!weightLearned && product !== null && (
+                <span class="gpc-est"> {t(lang, 'estimated')} · {category}</span>
+              )}
+            </span>
+          </div>
+          {vatDue && (
+            <div class="gpc-drow">
+              <span class="gpc-dlabel">{t(lang, 'vat')} 18%</span>
+              <span class="gpc-dvalue gpc-red">+{gel(customsGEL)}</span>
+            </div>
+          )}
+        </div>
 
         <div class={`gpc-meta ${ratesStale ? 'gpc-stale' : ''}`}>
           {ratesStale

@@ -1,8 +1,9 @@
 /**
  * Injected into the shadow root — never touches page CSS.
- * International Typographic Style (Swiss): flat planes, hairline rules,
- * Helvetica, tabular numerals, black/white/red. No gradients, no shadows
- * except a flat print-offset, no rounded corners.
+ * International Typographic Style, applied as discipline, not costume:
+ * one hero number (the landed total — the only number this card knows that
+ * the page doesn't), a 6x type scale, one accent used once, one alignment
+ * axis, hairline rules, generous whitespace.
  */
 export const PANEL_CSS = `
 :host { all: initial; }
@@ -14,177 +15,177 @@ export const PANEL_CSS = `
 :host {
   --paper: #ffffff;
   --ink: #111111;
-  --grey: #6e6e6e;
-  --grey-light: #a8a8a8;
+  --grey: #767676;
+  --grey-light: #b4b4b4;
   --rule: #111111;
-  --rule-soft: #e2e2e2;
+  --rule-soft: #e6e6e6;
   --red: #e30613;
-  --offset-shadow: 6px 6px 0 rgba(17,17,17,.14);
 }
 @media (prefers-color-scheme: dark) {
   :host {
-    --paper: #141414;
+    --paper: #161616;
     --ink: #f4f4f2;
     --grey: #9a9a9a;
-    --grey-light: #6e6e6e;
+    --grey-light: #5e5e5e;
     --rule: #f4f4f2;
-    --rule-soft: #333333;
+    --rule-soft: #2e2e2e;
     --red: #ff3340;
-    --offset-shadow: 6px 6px 0 rgba(0,0,0,.5);
   }
 }
 
-.gpc-label {
-  font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--grey);
-}
-
-/* ---------- collapsed pill: flat red plate ---------- */
+/* ---------- collapsed pill ---------- */
 .gpc-pill {
   position: fixed; right: 20px; bottom: 20px; z-index: 2147483646;
   display: inline-flex; align-items: baseline; gap: 8px;
-  padding: 10px 14px; border: none; cursor: pointer;
+  padding: 11px 16px; border: none; cursor: pointer;
   background: var(--red); color: #fff;
-  font-size: 13px; font-weight: 700; letter-spacing: .02em;
-  box-shadow: var(--offset-shadow);
+  font-size: 14px; font-weight: 700;
 }
-.gpc-pill:hover { transform: translate(-1px,-1px); box-shadow: 7px 7px 0 rgba(17,17,17,.14); }
-.gpc-pill-icon { font-size: 12px; font-weight: 400; }
+.gpc-pill:hover { background: #111; }
+.gpc-pill-icon { font-size: 12px; font-weight: 400; opacity: .85; }
 .gpc-pill-total { font-variant-numeric: tabular-nums; }
 
 /* ---------- expanded card ---------- */
 .gpc-card {
   position: fixed; right: 20px; bottom: 20px; z-index: 2147483646;
-  width: 344px;
+  width: 328px;
   background: var(--paper); color: var(--ink);
-  border: 1.5px solid var(--ink);
-  border-top: 6px solid var(--red);
-  box-shadow: var(--offset-shadow);
-  font-size: 13px; line-height: 1.45;
+  border-top: 5px solid var(--red);
+  box-shadow: 0 1px 2px rgba(0,0,0,.14), 0 12px 32px rgba(0,0,0,.18);
+  font-size: 13px; line-height: 1.5;
 }
 
 .gpc-header {
   display: flex; align-items: center; gap: 8px;
-  padding: 12px 16px 10px;
-  border-bottom: 1px solid var(--rule);
+  padding: 14px 22px 0;
   cursor: grab; user-select: none; touch-action: none;
 }
 .gpc-header:active { cursor: grabbing; }
 .gpc-corridor {
   border: none; background: transparent; padding: 0;
-  font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-  cursor: pointer; max-width: 170px; color: var(--ink);
+  font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  cursor: pointer; max-width: 170px; color: var(--grey);
 }
-.gpc-unsure { color: var(--red); font-weight: 700; cursor: help; }
+.gpc-corridor:hover { color: var(--ink); }
+.gpc-unsure { color: var(--red); font-weight: 700; cursor: help; font-size: 11px; }
 .gpc-arrow {
   color: var(--grey); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
 }
 .gpc-iconbtn {
   border: none; background: transparent; cursor: pointer;
-  color: var(--ink); font-size: 13px; padding: 2px 4px; line-height: 1;
+  color: var(--grey-light); font-size: 13px; padding: 2px 4px; line-height: 1;
 }
-.gpc-iconbtn:hover { color: var(--red); }
+.gpc-iconbtn:hover { color: var(--ink); }
 
-.gpc-body { padding: 14px 16px 12px; }
+.gpc-body { padding: 10px 22px 16px; }
 .gpc-warn {
   border-left: 3px solid var(--red);
-  padding: 4px 0 4px 10px; margin-bottom: 12px; font-size: 12px; color: var(--ink);
+  padding: 3px 0 3px 10px; margin: 8px 0 4px; font-size: 12px;
 }
 
-.gpc-product { display: flex; gap: 12px; margin-bottom: 10px; }
-.gpc-product img { width: 44px; height: 58px; object-fit: cover; flex-shrink: 0; filter: grayscale(1) contrast(1.05); }
-.gpc-product-info { min-width: 0; flex: 1; }
 .gpc-title {
-  font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  font-size: 10px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--grey);
-  margin-bottom: 4px;
+  margin-top: 10px;
 }
-.gpc-price { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.gpc-price strong { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.gpc-price-edit { display: inline-flex; gap: 6px; }
-.gpc-price-edit input, .gpc-price-edit select {
-  padding: 4px 6px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink);
-  font-size: 13px; border-radius: 0; font-variant-numeric: tabular-nums;
+
+/* ---------- hero: the landed total ---------- */
+.gpc-hero { padding: 14px 0 18px; }
+.gpc-hero-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--grey); margin-bottom: 2px;
 }
-.gpc-price-edit input { width: 88px; }
+.gpc-hero-total {
+  font-size: 52px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05;
+  font-variant-numeric: tabular-nums; color: var(--ink);
+}
+.gpc-hero-cur { font-size: 30px; font-weight: 400; color: var(--red); letter-spacing: 0; }
+.gpc-hero-sub { margin-top: 6px; font-size: 12px; color: var(--grey); }
+.gpc-hero-sub strong { color: var(--ink); font-weight: 700; }
+.gpc-red { color: var(--red); font-weight: 700; }
+
+/* ---------- carrier table: three flush columns ---------- */
+.gpc-quotes { border-top: 1px solid var(--rule); }
+.gpc-quote {
+  display: flex; align-items: baseline;
+  padding: 10px 0; border-bottom: 1px solid var(--rule-soft);
+}
+.gpc-carrier { font-weight: 700; font-size: 13px; flex: 1; }
+.gpc-cheapest .gpc-carrier::after {
+  content: '●'; color: var(--red); font-size: 8px; margin-left: 7px; vertical-align: 2px;
+}
+.gpc-days {
+  width: 86px; text-align: right; font-size: 10px; color: var(--grey);
+  letter-spacing: .04em; font-variant-numeric: tabular-nums;
+}
+.gpc-total {
+  width: 84px; text-align: right; font-weight: 400; font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.gpc-cheapest .gpc-total { font-weight: 700; }
+.gpc-unavail .gpc-carrier { color: var(--grey-light); font-weight: 400; }
+.gpc-reason { font-size: 10px; color: var(--grey-light); text-align: right; flex: 1; }
+
+/* ---------- details: label column / value column ---------- */
+.gpc-details { padding: 12px 0 0; display: grid; gap: 8px; }
+.gpc-drow { display: flex; align-items: baseline; }
+.gpc-dlabel {
+  width: 86px; flex-shrink: 0;
+  font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--grey);
+}
+.gpc-dvalue { font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.gpc-est { color: var(--grey-light); font-size: 10.5px; }
 .gpc-gel {
-  border: none; background: transparent; color: var(--red); cursor: pointer; padding: 0;
-  font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums;
+  border: none; background: transparent; color: var(--grey); cursor: pointer; padding: 0;
+  font-size: 12.5px; font-variant-numeric: tabular-nums;
+  border-bottom: 1px dotted var(--grey-light);
 }
-.gpc-gel:hover { border-bottom: 1px solid var(--red); }
+.gpc-gel:hover { color: var(--red); border-bottom-color: var(--red); }
 .gpc-weight-chip {
-  border: none; border-bottom: 1px dashed var(--grey); background: transparent;
-  padding: 0 0 1px; font-size: 11px; cursor: pointer; white-space: nowrap;
+  border: none; border-bottom: 1px dashed var(--grey-light); background: transparent;
+  padding: 0 0 1px; font-size: 12.5px; cursor: pointer; white-space: nowrap;
   color: var(--ink); font-variant-numeric: tabular-nums;
 }
 .gpc-weight-chip:hover { border-bottom-color: var(--red); color: var(--red); }
+.gpc-price-edit { display: inline-flex; gap: 6px; }
+.gpc-price-edit input, .gpc-price-edit select {
+  padding: 3px 6px; border: 1px solid var(--rule-soft); background: var(--paper); color: var(--ink);
+  font-size: 12.5px; border-radius: 0; font-variant-numeric: tabular-nums;
+}
+.gpc-price-edit input { width: 84px; }
+.gpc-price-edit input:focus, .gpc-price-edit select:focus { outline: none; border-color: var(--ink); }
 
 .gpc-fxinfo {
-  border-left: 3px solid var(--ink);
-  padding: 4px 0 4px 10px; margin: 10px 0; font-size: 11px; color: var(--grey);
+  border-left: 3px solid var(--rule-soft);
+  padding: 3px 0 3px 10px; margin: 10px 0 0; font-size: 10.5px; color: var(--grey);
   font-variant-numeric: tabular-nums;
 }
 
-.gpc-editor { border: 1px solid var(--rule); padding: 12px; margin: 10px 0; display: grid; gap: 9px; }
+.gpc-editor { border: 1px solid var(--rule-soft); padding: 14px; margin: 12px 0 0; display: grid; gap: 10px; }
 .gpc-editor label {
   display: flex; justify-content: space-between; align-items: center; gap: 8px;
-  font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--grey);
+  font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--grey);
 }
 .gpc-editor input {
-  width: 66px; padding: 4px 6px; border: 1px solid var(--rule); border-radius: 0;
+  width: 66px; padding: 4px 6px; border: 1px solid var(--rule-soft); border-radius: 0;
   background: var(--paper); color: var(--ink); font-size: 13px; font-variant-numeric: tabular-nums;
 }
+.gpc-editor input:focus { outline: none; border-color: var(--ink); }
 .gpc-dims { display: inline-flex; align-items: center; gap: 4px; color: var(--ink); }
 .gpc-dims input { width: 44px; }
 .gpc-save {
-  justify-self: end; border: none; background: var(--red); color: #fff;
-  padding: 7px 20px; cursor: pointer; font-weight: 700; font-size: 10px;
-  letter-spacing: .12em; text-transform: uppercase;
+  justify-self: end; border: none; background: var(--ink); color: var(--paper);
+  padding: 8px 22px; cursor: pointer; font-weight: 700; font-size: 10px;
+  letter-spacing: .14em; text-transform: uppercase;
 }
-.gpc-save:hover { background: var(--ink); color: var(--paper); }
-
-.gpc-est-note { color: var(--grey); font-size: 11px; margin: 4px 0 8px; font-variant-numeric: tabular-nums; }
-
-.gpc-quotes { border-top: 1px solid var(--rule); margin: 10px 0 0; }
-.gpc-quote {
-  display: flex; align-items: baseline; gap: 10px;
-  padding: 9px 2px; border-bottom: 1px solid var(--rule-soft);
-}
-.gpc-cheapest { position: relative; padding-left: 12px; }
-.gpc-cheapest::before {
-  content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 4px; background: var(--red);
-}
-.gpc-carrier { font-weight: 700; width: 96px; flex-shrink: 0; font-size: 13px; letter-spacing: -0.01em; }
-.gpc-days { display: block; font-weight: 400; font-size: 9.5px; color: var(--grey); letter-spacing: .06em; text-transform: uppercase; }
-.gpc-breakdown { color: var(--grey); font-size: 10.5px; flex: 1; min-width: 0; font-variant-numeric: tabular-nums; }
-.gpc-total { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; font-size: 14.5px; }
-.gpc-cheapest .gpc-total { color: var(--red); }
-.gpc-badge { color: var(--red); font-weight: 700; font-size: 11px; }
-.gpc-vol { cursor: help; }
-.gpc-unavail .gpc-carrier, .gpc-unavail .gpc-reason { color: var(--grey-light); }
-.gpc-reason { font-size: 10.5px; }
-
-.gpc-summary { padding-top: 10px; display: grid; gap: 5px; }
-.gpc-sumrow {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 11px; color: var(--grey); font-variant-numeric: tabular-nums;
-  letter-spacing: .04em;
-}
-.gpc-sumrow > span:first-child { text-transform: uppercase; font-size: 9.5px; letter-spacing: .1em; font-weight: 700; }
-.gpc-vat-free { color: var(--ink); }
-.gpc-vat-free > span:first-child { color: var(--grey); }
-.gpc-vat-due { color: var(--red); }
-.gpc-grand {
-  border-top: 3px solid var(--ink); margin-top: 6px; padding-top: 8px;
-  color: var(--ink); align-items: baseline;
-}
-.gpc-grand > span:first-child { font-size: 10px; }
-.gpc-grand > span:last-child { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+.gpc-save:hover { background: var(--red); color: #fff; }
 
 .gpc-meta {
-  color: var(--grey-light); font-size: 8.5px; margin-top: 12px;
-  letter-spacing: .12em; text-transform: uppercase; font-variant-numeric: tabular-nums;
+  color: var(--grey-light); font-size: 8.5px; margin-top: 16px;
+  letter-spacing: .14em; text-transform: uppercase; font-variant-numeric: tabular-nums;
 }
 .gpc-stale { color: var(--red); }
+.gpc-vol { cursor: help; }
 `;
