@@ -4,9 +4,11 @@ import {
   DEFAULT_ADDRESS_FIELDS,
   DEFAULT_SETTINGS,
   getAddressBook,
+  getHistory,
   saveAddress,
   type AddressBook,
   type AddressField,
+  type HistoryEntry,
   type Settings,
 } from '../content/storage';
 import { CORRIDOR_LABELS } from '../content/i18n';
@@ -28,7 +30,9 @@ const CARRIER_SITES: Record<string, string> = {
 
 const L = {
   ka: {
-    settingsTab: 'პარამეტრები', addressesTab: 'მისამართები',
+    settingsTab: 'პარამეტრები', addressesTab: 'მისამართები', historyTab: 'ისტორია',
+    thisMonth: 'ამ თვეში', itemsWord: 'ნივთი', emptyHistory: 'ჯერ არაფერია — გახსენით პროდუქტის გვერდი',
+    dutyFreeTag: 'უბაჟო ✓', vatTag: 'დღგ',
     addrHint: 'ჩააკოპირეთ თქვენი პირადი საწყობის მისამართი გადამზიდის საიტიდან ერთხელ — შემდეგ ველების კოპირება აქედან ერთი დაჭერით შეგიძლიათ',
     copyAll: 'ყველას კოპირება', saved: 'შენახულია ✓', copied: 'დაკოპირდა ✓',
     openSite: 'გახსენით', addrSave: 'შენახვა',
@@ -43,7 +47,9 @@ const L = {
     refresh: 'განახლება', enabled: 'ჩართული',
   },
   en: {
-    settingsTab: 'Settings', addressesTab: 'Addresses',
+    settingsTab: 'Settings', addressesTab: 'Addresses', historyTab: 'History',
+    thisMonth: 'this month', itemsWord: 'items', emptyHistory: 'Nothing yet — open a product page',
+    dutyFreeTag: 'duty-free ✓', vatTag: 'VAT',
     addrHint: 'Paste your personal warehouse address from the carrier site once — then copy any field from here with one click',
     copyAll: 'Copy all', saved: 'Saved ✓', copied: 'Copied ✓',
     openSite: 'open', addrSave: 'Save',
@@ -156,13 +162,60 @@ function Addresses({ lang }: { lang: 'ka' | 'en' }) {
   );
 }
 
+function History({ lang }: { lang: 'ka' | 'en' }) {
+  const s = L[lang];
+  const [list, setList] = useState<HistoryEntry[]>([]);
+  useEffect(() => {
+    void getHistory().then(setList);
+  }, []);
+
+  const monthStart = new Date();
+  monthStart.setDate(1);
+  monthStart.setHours(0, 0, 0, 0);
+  const monthItems = list.filter((e) => e.ts >= monthStart.getTime());
+  const monthSum = monthItems.reduce((sum, e) => sum + e.totalGEL, 0);
+
+  const when = (ts: number) => {
+    const d = Math.floor((Date.now() - ts) / 86400000);
+    return d === 0 ? (lang === 'ka' ? 'დღეს' : 'today') : d === 1 ? (lang === 'ka' ? 'გუშინ' : 'yesterday') : new Date(ts).toLocaleDateString(lang === 'ka' ? 'ka-GE' : 'en-GB', { day: 'numeric', month: 'short' });
+  };
+
+  return (
+    <>
+      {list.length === 0 && <div class="hint">{s.emptyHistory}</div>}
+      <div class="hist">
+        {list.map((e) => (
+          <div class="h-item">
+            <span class="h-fav">{CORRIDOR_LABELS[e.corridor]?.flag ?? '📦'}</span>
+            <span class="h-mid">
+              <span class="h-name">{e.title}</span>
+              <span class="h-sub">{e.domain.replace(/^www\./, '')} · {when(e.ts)}</span>
+            </span>
+            <span class="h-tot">
+              ≈{e.totalGEL} ₾
+              <span class={`h-tag ${e.vatDue ? 'vat' : ''}`}>
+                {e.vatDue ? s.vatTag : s.dutyFreeTag}
+              </span>
+            </span>
+          </div>
+        ))}
+      </div>
+      {monthItems.length > 0 && (
+        <div class="section-title">
+          {s.thisMonth} · {monthItems.length} {s.itemsWord} · ≈{monthSum} ₾
+        </div>
+      )}
+    </>
+  );
+}
+
 function Popup() {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [fx, setFx] = useState<FxRates | null>(null);
   const [fxCheckedAt, setFxCheckedAt] = useState<number>(0);
   const [anySite, setAnySite] = useState(false);
   const [status, setStatus] = useState('');
-  const [tab, setTab] = useState<'settings' | 'addresses'>('settings');
+  const [tab, setTab] = useState<'settings' | 'history' | 'addresses'>('settings');
   const lang = settings.language;
   const s = L[lang];
 
@@ -251,11 +304,15 @@ function Popup() {
         <button class={tab === 'settings' ? 'active' : ''} onClick={() => setTab('settings')}>
           {s.settingsTab}
         </button>
+        <button class={tab === 'history' ? 'active' : ''} onClick={() => setTab('history')}>
+          {s.historyTab}
+        </button>
         <button class={tab === 'addresses' ? 'active' : ''} onClick={() => setTab('addresses')}>
           {s.addressesTab}
         </button>
       </div>
 
+      {tab === 'history' && <History lang={lang} />}
       {tab === 'addresses' && <Addresses lang={lang} />}
 
       {tab === 'settings' && <>

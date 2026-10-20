@@ -1,5 +1,10 @@
 // Demo-only: stub chrome APIs so the real popup renders in a plain page.
 const store: Record<string, unknown> = {
+  history: [
+    { title: 'Retro Classic Sneakers', domain: 'www.mrporter.com', corridor: 'usa', totalGEL: 1136, vatDue: true, ts: Date.now() - 3600000 },
+    { title: 'Ribbed Dress', domain: 'www.zara.com', corridor: 'greece', totalGEL: 156, vatDue: false, ts: Date.now() - 90000000 },
+    { title: 'Wasserabweisende Jacke', domain: 'www.zara.com', corridor: 'germany', totalGEL: 397, vatDue: true, ts: Date.now() - 260000000 },
+  ],
   addressBook: {
     'camex:usa': [
       { label: 'Full name', value: 'GIORGI TSURTSUMIA' },

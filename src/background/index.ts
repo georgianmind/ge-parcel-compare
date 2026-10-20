@@ -136,11 +136,20 @@ async function refreshRemoteRates(): Promise<void> {
 }
 
 chrome.runtime.onMessage.addListener(
-  (msg: { type: string; force?: boolean; detected?: boolean }, sender, sendResponse) => {
-    // Toolbar badge: "₾" on tabs where a product was detected.
+  (
+    msg: { type: string; force?: boolean; detected?: boolean; total?: number },
+    sender,
+    sendResponse,
+  ) => {
+    // Toolbar badge: landed total (or "₾") on tabs where a product was detected.
     if (msg?.type === 'badge' && sender.tab?.id !== undefined) {
+      const text = !msg.detected
+        ? ''
+        : msg.total && msg.total < 10000
+          ? String(msg.total)
+          : '₾';
       void chrome.action
-        .setBadgeText({ tabId: sender.tab.id, text: msg.detected ? '₾' : '' })
+        .setBadgeText({ tabId: sender.tab.id, text })
         .catch(() => undefined); // tab may already be gone
       void chrome.action
         .setBadgeBackgroundColor({ tabId: sender.tab.id, color: '#0376c9' })

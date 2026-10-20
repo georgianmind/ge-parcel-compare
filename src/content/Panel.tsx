@@ -12,14 +12,19 @@ import { UNAVAILABLE_REASONS } from '../data/rates';
 import { categorize, estimateFor } from '../data/weights';
 import { CARRIER_LABELS, CORRIDOR_LABELS, MONTHS, t, type Lang } from './i18n';
 import {
+  getCart,
   getLearnedWeights,
   getPanelExpanded,
   getPanelPos,
   learnWeight,
+  pushHistory,
+  setCart,
   setPanelExpanded,
   setPanelPos,
+  type CartItem,
   type Settings,
 } from './storage';
+import { downloadShareCard } from './share';
 
 const CARRIERS = ['camex', 'inex', 'usa2georgia', 'kiwipost'] as const;
 const RATES_STALE_DAYS = 60;
@@ -116,6 +121,9 @@ export function Panel({ product, rates, fx, settings }: Props) {
   const [showFxInfo, setShowFxInfo] = useState(false);
   const [openCarrier, setOpenCarrier] = useState<string | null>(null);
   const [showSplit, setShowSplit] = useState(false);
+  const [cart, setCartState] = useState<CartItem[]>([]);
+  const [cartMode, setCartMode] = useState(false);
+  const [heroInGel, setHeroInGel] = useState(true);
 
   // --- editable state ---
   const category = categorize(product?.category ?? product?.title);
@@ -136,6 +144,7 @@ export function Panel({ product, rates, fx, settings }: Props) {
       void getPanelExpanded().then(setExpanded);
     }
     void getPanelPos(domain).then((p) => p && setPos(p));
+    void getCart().then(setCartState);
   }, [domain]);
 
   const toggleExpanded = () => {
@@ -176,11 +185,32 @@ export function Panel({ product, rates, fx, settings }: Props) {
     dragRef.current = null;
   };
 
+  // --- cart aggregates: one parcel, combined weight/volume/value ---
+  const cartAgg = useMemo(() => {
+    if (cart.length === 0) return null;
+    const kgSum = cart.reduce((s, i) => s + i.kg, 0);
+    const volume = cart.reduce((s, i) => s + i.volume, 0);
+    const priceGEL = cart.reduce((s, i) => s + i.priceGEL, 0);
+    const side = Math.cbrt(volume); // volumetric = volume/divisor, shape-independent
+    return { kgSum, volume, priceGEL, dims: { l: side, w: side, h: side } };
+  }, [cart]);
+
+  const inCart = cartMode && cartAgg !== null;
+
   // --- quotes ---
   const roles = useMemo(() => {
-    const input = {
-      actualKg: kg, dims, productPrice: price, productCurrency: currency, localShipping, fx,
-    };
+    const input = inCart
+      ? {
+          actualKg: cartAgg!.kgSum,
+          dims: cartAgg!.dims,
+          productPrice: cartAgg!.priceGEL,
+          productCurrency: 'GEL' as Currency,
+          localShipping: 0,
+          fx,
+        }
+      : {
+          actualKg: kg, dims, productPrice: price, productCurrency: currency, localShipping, fx,
+        };
     const disabled = new Set(settings.disabledCarriers ?? []);
     const rows: CarrierRow[] = [];
     for (const carrier of CARRIERS) {
@@ -205,7 +235,7 @@ export function Panel({ product, rates, fx, settings }: Props) {
       return a.available ? -1 : b.available ? 1 : 0;
     });
     return rows;
-  }, [kg, dims, price, currency, localShipping, corridor, fx, rates, settings, lang]);
+  }, [kg, dims, price, currency, localShipping, corridor, fx, rates, settings, lang, inCart, cartAgg]);
 
   const cheapest = roles.find((r) => r.available);
   const productValueGEL = cheapest?.available ? cheapest.quote.productValueGEL : 0;
@@ -240,6 +270,73 @@ export function Panel({ product, rates, fx, settings }: Props) {
     void learnWeight(category, { kg, dims });
     setWeightLearned(true);
     setEditingWeight(false);
+  };
+
+  // history ledger + toolbar badge total (fire-and-forget, deduped by product)
+  useEffect(() => {
+    if (!product || grandTotal === null || inCart) return;
+    const timer = setTimeout(() => {
+      void pushHistory({
+        title: product.title, domain, corridor,
+        totalGEL: Math.round(grandTotal), vatDue, ts: Date.now(),
+      });
+      void chrome.runtime
+        .sendMessage({ type: 'badge', detected: true, total: Math.round(grandTotal) })
+        .catch(() => undefined);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [product?.title, product && grandTotal !== null ? Math.round(grandTotal) : 0]);
+
+  const addToCart = () => {
+    if (!product || !cheapest?.available) return;
+    const item: CartItem = {
+      id: `${Date.now()}`,
+      title: product.title,
+      priceGEL: productValueGEL,
+      kg,
+      volume: dims.l * dims.w * dims.h,
+      corridor,
+      domain,
+      ts: Date.now(),
+    };
+    // one parcel = one corridor; starting a new corridor starts a new cart
+    const next = cart.length > 0 && cart[0].corridor !== corridor ? [item] : [...cart, item];
+    setCartState(next);
+    setCartMode(true);
+    void setCart(next);
+  };
+  const clearCart = () => {
+    setCartState([]);
+    setCartMode(false);
+    void setCart([]);
+  };
+
+  const share = () => {
+    if (!cheapest?.available || grandTotal === null) return;
+    downloadShareCard({
+      title: inCart ? `${cart.length} ${t(lang, 'items')}` : product?.title ?? '—',
+      domain,
+      routeFrom: CORRIDOR_LABELS[corridor].code,
+      flag: CORRIDOR_LABELS[corridor].flag,
+      totalGEL: grandTotal,
+      pagePrice: inCart
+        ? `${Math.round(cartAgg!.priceGEL)} ₾`
+        : `${price.toFixed(2)} ${sym(currency)}`,
+      carriers: roles
+        .filter((r) => r.available)
+        .slice(0, 3)
+        .map((r, i) => ({
+          name: CARRIER_LABELS[r.carrier],
+          priceGEL: r.available ? r.shippingGEL + r.quote.customsGEL : 0,
+          days: r.available ? r.deliveryDays : undefined,
+          best: i === 0,
+        })),
+      productValueGEL,
+      vatDue,
+      customsGEL,
+      arrival: arrival?.range,
+      lang,
+    });
   };
 
   if (hidden) return null;
@@ -294,6 +391,10 @@ export function Panel({ product, rates, fx, settings }: Props) {
         )}
         <span class="gpc-sp"></span>
         <button
+          class="gpc-iconbtn" onClick={share}
+          onPointerDown={(e) => e.stopPropagation()} title={t(lang, 'shareCard')}
+        >⇪</button>
+        <button
           class="gpc-iconbtn" onClick={toggleExpanded}
           onPointerDown={(e) => e.stopPropagation()} title={t(lang, 'close')}
         >—</button>
@@ -322,11 +423,40 @@ export function Panel({ product, rates, fx, settings }: Props) {
           </div>
         )}
 
+        {(cart.length > 0 || product) && (
+          <div class="gpc-cartbar">
+            {product && cheapest?.available && (
+              <button class="gpc-cart-add" onClick={addToCart}>{t(lang, 'addToCart')}</button>
+            )}
+            {cart.length > 0 && (
+              <>
+                <button
+                  class={`gpc-cart-chip ${cartMode ? 'on' : ''}`}
+                  onClick={() => setCartMode((v) => !v)}
+                >
+                  🧺 {cart.length} {t(lang, 'items')} · {Math.round(cartAgg?.priceGEL ?? 0)} ₾
+                </button>
+                <button class="gpc-cart-clear" onClick={clearCart}>✕</button>
+              </>
+            )}
+          </div>
+        )}
+
         {grandTotal !== null && cheapest?.available && (
           <div class="gpc-hero">
-            <div class="gpc-hero-label">{t(lang, 'totalToTbilisi')}</div>
-            <div class="gpc-hero-total">
-              ≈{Math.round(heroValue)}<span class="gpc-hero-cur"> ₾</span>
+            <div class="gpc-hero-label">
+              {inCart ? `${t(lang, 'cartLabel')} · ${cart.length} ${t(lang, 'items')}` : t(lang, 'totalToTbilisi')}
+            </div>
+            <div
+              class="gpc-hero-total"
+              onClick={() => setHeroInGel((v) => !v)}
+              title="₾ ⇄ "
+            >
+              {heroInGel || currency === 'GEL' ? (
+                <>≈{Math.round(heroValue)}<span class="gpc-hero-cur"> ₾</span></>
+              ) : (
+                <>≈{Math.round(heroValue / fx[currency])}<span class="gpc-hero-cur"> {sym(currency)}</span></>
+              )}
             </div>
             <div class="gpc-hero-sub">
               <strong>{CARRIER_LABELS[cheapest.carrier]}</strong>
@@ -489,10 +619,20 @@ export function Panel({ product, rates, fx, settings }: Props) {
             </label>
             <label>
               {t(lang, 'weight')}
-              <input
-                type="number" min="0.1" step="0.1" value={kg}
-                onInput={(e) => setKg(parseFloat((e.target as HTMLInputElement).value) || 0.1)}
-              />
+              <span class="gpc-kg-wrap">
+                <span class="gpc-presets">
+                  {[0.3, 0.5, 1, 2].map((p) => (
+                    <button
+                      class={`gpc-preset ${kg === p ? 'on' : ''}`}
+                      onClick={(e) => { e.preventDefault(); setKg(p); }}
+                    >{p}</button>
+                  ))}
+                </span>
+                <input
+                  type="number" min="0.1" step="0.1" value={kg}
+                  onInput={(e) => setKg(parseFloat((e.target as HTMLInputElement).value) || 0.1)}
+                />
+              </span>
             </label>
             <label>
               {t(lang, 'dims')}

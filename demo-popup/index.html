@@ -91,6 +91,16 @@
       }
       a.sitelink:hover { color: var(--red); }
       .divider { border-top: 1px solid var(--rule); margin: 2px 0; }
+      .hist { display: grid; gap: 4px; }
+      .h-item { display: flex; gap: 10px; align-items: center; padding: 9px 10px; border-radius: 12px; }
+      .h-item:hover { background: var(--surface); }
+      .h-fav { width: 30px; height: 30px; border-radius: 9px; background: var(--surface); display: grid; place-items: center; font-size: 14px; flex-shrink: 0; }
+      .h-mid { flex: 1; min-width: 0; }
+      .h-name { display: block; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .h-sub { display: block; font-size: 10px; color: var(--grey-light); font-weight: 500; }
+      .h-tot { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+      .h-tag { display: block; font-size: 9px; font-weight: 600; color: #1d9e5a; }
+      .h-tag.vat { color: var(--red); }
     </style>
   </head>
   <body>

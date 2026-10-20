@@ -51,6 +51,11 @@ const STRINGS = {
   },
   deliveryTotal: { ka: 'მიწოდება სულ', en: 'delivery total' },
   volumetricShort: { ka: 'მოცულობითი', en: 'volumetric' },
+  items: { ka: 'ნივთი', en: 'items' },
+  addToCart: { ka: '+ ამანათში', en: '+ add to parcel' },
+  cartLabel: { ka: 'ერთი ამანათი', en: 'one parcel' },
+  clearCart: { ka: 'გასუფთავება', en: 'clear' },
+  shareCard: { ka: 'ბარათის გაზიარება', en: 'share card' },
   weightShort: { ka: 'წონა', en: 'weight' },
   openPanel: { ka: 'გზავნილის ღირებულება', en: 'shipping cost' },
 } as const;

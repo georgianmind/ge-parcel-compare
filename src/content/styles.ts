@@ -153,8 +153,31 @@ button { transition: all .16s ease; }
 }
 .gpc-prod-sub { display: block; font-size: 10.5px; color: var(--grey); font-weight: 500; margin-top: 1px; }
 
+/* cart bar */
+.gpc-cartbar { display: flex; align-items: center; gap: 6px; margin-top: 12px; }
+.gpc-cart-add {
+  border: 1px dashed var(--grey-light); background: transparent; color: var(--grey);
+  border-radius: 999px; padding: 4px 12px; font-size: 10.5px; font-weight: 650; cursor: pointer;
+}
+.gpc-cart-add:hover { border-color: var(--red); color: var(--red); border-style: solid; }
+.gpc-cart-chip {
+  border: 1px solid var(--tile-border); background: var(--surface); color: var(--grey);
+  border-radius: 999px; padding: 4px 12px; font-size: 10.5px; font-weight: 650; cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+.gpc-cart-chip.on {
+  background: var(--win-bg); border-color: var(--win-border); color: var(--red);
+  box-shadow: 0 0 14px rgba(229,72,77,.12);
+}
+.gpc-cart-clear {
+  border: none; background: transparent; color: var(--grey-light); cursor: pointer;
+  font-size: 10px; padding: 2px 4px;
+}
+.gpc-cart-clear:hover { color: var(--red); }
+
 /* hero */
 .gpc-hero { margin-top: 14px; }
+.gpc-hero-total { cursor: pointer; }
 .gpc-hero-label { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--grey); }
 .gpc-hero-total {
   font-size: 54px; font-weight: 750; letter-spacing: -0.045em; line-height: 1.05;
@@ -193,13 +216,19 @@ button { transition: all .16s ease; }
   font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--grey);
 }
 
-/* carrier tiles */
+/* carrier tiles — staggered entrance */
 .gpc-rows { margin-top: 12px; display: grid; gap: 6px; }
+@keyframes gpc-tile-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .gpc-row {
   border-radius: 14px; padding: 10px 13px; cursor: pointer;
   background: var(--tile); border: 1px solid var(--tile-border); box-shadow: var(--tile-shadow);
   transition: transform .14s ease, border-color .14s ease;
+  animation: gpc-tile-in .32s cubic-bezier(.2,.9,.3,1) both;
 }
+.gpc-row:nth-child(1) { animation-delay: .04s; }
+.gpc-row:nth-child(2) { animation-delay: .09s; }
+.gpc-row:nth-child(3) { animation-delay: .14s; }
+.gpc-row:nth-child(4) { animation-delay: .19s; }
 .gpc-row:hover { transform: translateY(-1px); }
 .gpc-win { background: var(--win-bg); border-color: var(--win-border); box-shadow: var(--win-shadow); }
 .gpc-dim { opacity: .45; cursor: default; }
@@ -281,6 +310,14 @@ button { transition: all .16s ease; }
 .gpc-price-edit input { width: 76px; }
 .gpc-dims { display: inline-flex; align-items: center; gap: 4px; color: var(--ink); }
 .gpc-dims input { width: 42px; }
+.gpc-kg-wrap { display: inline-flex; align-items: center; gap: 6px; }
+.gpc-presets { display: inline-flex; gap: 3px; }
+.gpc-preset {
+  border: none; background: var(--solid); color: var(--grey); border-radius: 7px;
+  padding: 3px 8px; font-size: 10.5px; font-weight: 650; cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+.gpc-preset.on { background: var(--red); color: #fff; }
 .gpc-save {
   justify-self: end; border: none; background: var(--red); color: #fff;
   padding: 7px 20px; cursor: pointer; font-weight: 650; font-size: 12px; border-radius: 999px;

@@ -82,6 +82,48 @@ export async function setPanelExpanded(v: boolean): Promise<void> {
   await chrome.storage.local.set({ panelExpanded: v });
 }
 
+// --- parcel cart: several items combined into one shipment ---
+export interface CartItem {
+  id: string;
+  title: string;
+  priceGEL: number;
+  kg: number;
+  /** box volume in cm³ (volumetric weight = Σvolume / divisor, same as summing) */
+  volume: number;
+  corridor: string;
+  domain: string;
+  ts: number;
+}
+export async function getCart(): Promise<CartItem[]> {
+  const { cart } = (await chrome.storage.local.get('cart')) as { cart?: CartItem[] };
+  return cart ?? [];
+}
+export async function setCart(items: CartItem[]): Promise<void> {
+  await chrome.storage.local.set({ cart: items });
+}
+
+// --- history of compared products (local only) ---
+export interface HistoryEntry {
+  title: string;
+  domain: string;
+  corridor: string;
+  totalGEL: number;
+  vatDue: boolean;
+  ts: number;
+}
+export async function getHistory(): Promise<HistoryEntry[]> {
+  const { history } = (await chrome.storage.local.get('history')) as { history?: HistoryEntry[] };
+  return history ?? [];
+}
+export async function pushHistory(entry: HistoryEntry): Promise<void> {
+  const list = await getHistory();
+  const filtered = list.filter(
+    (e) => !(e.title === entry.title && e.domain === entry.domain),
+  );
+  filtered.unshift(entry);
+  await chrome.storage.local.set({ history: filtered.slice(0, 20) });
+}
+
 // --- personal forwarder address book (per carrier, per corridor) ---
 export interface AddressField {
   label: string;
