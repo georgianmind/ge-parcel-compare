@@ -32,6 +32,25 @@ const STRINGS = {
   days: { ka: 'დღე', en: 'days' },
   totalToTbilisi: { ka: 'სულ, თბილისამდე', en: 'total to Tbilisi' },
   dutyFreeShort: { ka: 'უბაჟო ✓', en: 'duty-free ✓' },
+  arrives: { ka: 'ჩამოვა', en: 'arrives' },
+  arrivalTitle: { ka: 'სავარაუდო ჩამოსვლა თბილისში', en: 'estimated arrival in Tbilisi' },
+  warehouseBy: { ka: 'საწყობში', en: 'at warehouse' },
+  itemLimit: { ka: 'ნივთი', en: 'item' },
+  limit: { ka: 'ლიმიტი', en: 'limit' },
+  headroom: { ka: 'კიდევ {x} ₾ უბაჟოდ', en: '{x} ₾ of duty-free room left' },
+  vatApplies: { ka: 'დღგ 18% ვრცელდება', en: 'VAT 18% applies' },
+  best: { ka: 'საუკეთესო', en: 'best' },
+  splitTip: {
+    ka: 'ორ შეკვეთად გაყოფა (≤300 ₾) დაზოგავს ~{x} ₾-ს',
+    en: 'splitting into two orders (≤300 ₾) saves ~{x} ₾',
+  },
+  splitHow: { ka: 'ნახე', en: 'how' },
+  splitExplain: {
+    ka: 'განბაჟება მოქმედებს თითო ამანათზე: ორი შეკვეთა, თითო 300 ₾-მდე, ჩამოვა უბაჟოდ — მოგიწევთ მხოლოდ ორჯერ ტრანსპორტირების გადახდა.',
+    en: 'Customs applies per parcel: two orders, each under 300 ₾, arrive duty-free — you only pay transport twice.',
+  },
+  deliveryTotal: { ka: 'მიწოდება სულ', en: 'delivery total' },
+  volumetricShort: { ka: 'მოცულობითი', en: 'volumetric' },
   weightShort: { ka: 'წონა', en: 'weight' },
   openPanel: { ka: 'გზავნილის ღირებულება', en: 'shipping cost' },
 } as const;
@@ -44,17 +63,25 @@ export function t(lang: Lang, key: StringKey, vars?: Record<string, string | num
   return s;
 }
 
-export const CORRIDOR_LABELS: Record<string, { ka: string; en: string; flag: string }> = {
-  usa: { ka: 'აშშ', en: 'USA', flag: '🇺🇸' },
-  turkey: { ka: 'თურქეთი', en: 'Turkey', flag: '🇹🇷' },
-  'china-air': { ka: 'ჩინეთი (ავია)', en: 'China (air)', flag: '🇨🇳' },
-  'china-sea': { ka: 'ჩინეთი (საზღვაო)', en: 'China (sea)', flag: '🇨🇳' },
-  uk: { ka: 'დიდი ბრიტანეთი', en: 'UK', flag: '🇬🇧' },
-  germany: { ka: 'გერმანია', en: 'Germany', flag: '🇩🇪' },
-  greece: { ka: 'საბერძნეთი', en: 'Greece', flag: '🇬🇷' },
-  italy: { ka: 'იტალია', en: 'Italy', flag: '🇮🇹' },
-  spain: { ka: 'ესპანეთი', en: 'Spain', flag: '🇪🇸' },
-  cyprus: { ka: 'კვიპროსი', en: 'Cyprus', flag: '🇨🇾' },
+export const CORRIDOR_LABELS: Record<
+  string,
+  { ka: string; en: string; flag: string; code: string }
+> = {
+  usa: { ka: 'აშშ', en: 'USA', flag: '🇺🇸', code: 'JFK' },
+  turkey: { ka: 'თურქეთი', en: 'Turkey', flag: '🇹🇷', code: 'IST' },
+  'china-air': { ka: 'ჩინეთი (ავია)', en: 'China (air)', flag: '🇨🇳', code: 'PVG' },
+  'china-sea': { ka: 'ჩინეთი (საზღვაო)', en: 'China (sea)', flag: '🇨🇳', code: 'SHA' },
+  uk: { ka: 'დიდი ბრიტანეთი', en: 'UK', flag: '🇬🇧', code: 'LHR' },
+  germany: { ka: 'გერმანია', en: 'Germany', flag: '🇩🇪', code: 'FRA' },
+  greece: { ka: 'საბერძნეთი', en: 'Greece', flag: '🇬🇷', code: 'ATH' },
+  italy: { ka: 'იტალია', en: 'Italy', flag: '🇮🇹', code: 'MXP' },
+  spain: { ka: 'ესპანეთი', en: 'Spain', flag: '🇪🇸', code: 'MAD' },
+  cyprus: { ka: 'კვიპროსი', en: 'Cyprus', flag: '🇨🇾', code: 'LCA' },
+};
+
+export const MONTHS: Record<Lang, string[]> = {
+  ka: ['იან', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ', 'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ'],
+  en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 };
 
 export const CARRIER_LABELS: Record<string, string> = {
